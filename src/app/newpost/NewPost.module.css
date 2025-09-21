@@ -1,0 +1,95 @@
+.container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.centerButton {
+  padding: 12px 24px;
+  font-size: 18px;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.centerButton:hover {
+  background-color: #005bb5;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.modal {
+  position: fixed;
+  background: white;
+  width: 90%;
+  max-width: 500px;
+  padding: 30px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.textInput {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.fileInput {
+  font-size: 14px;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.submitButton {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.submitButton:hover {
+  background-color: #218838;
+}
+
+.cancelButton {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #ccc;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cancelButton:hover {
+  background-color: #999;
+}
