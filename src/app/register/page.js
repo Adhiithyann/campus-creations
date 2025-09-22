@@ -42,9 +42,17 @@ export default function Register() {
     <>
       {/* Centered Button */}
       <div className="button-container">
-        <button onClick={() => setIsOpen(true)} className="open-button">
+        <button
+          onClick={() => {
+            setForm({ username: '', email: '', password: '' }); // reset form here too
+            setError(null); // clear previous errors
+            setIsOpen(true);
+          }}
+          className="open-button"
+        >
           Register
         </button>
+
       </div>
 
       {/* Modal */}

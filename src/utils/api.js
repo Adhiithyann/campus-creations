@@ -1,16 +1,17 @@
-import axios from 'axios'
+import axios from 'axios';
+
+const API_BASE = 'http://127.0.0.1:8000/api';
 
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api/',
-})
+  baseURL: API_BASE,
+});
 
-// Add token to all requests automatically
-api.interceptors.request.use((config) => {
-  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
+api.interceptors.request.use(config => {
+  const token = localStorage.getItem('token');
   if (token) {
-    config.headers.Authorization = `Token ${token}`
+    config.headers.Authorization = `Token ${token}`;
   }
-  return config
-})
+  return config;
+});
 
-export default api
+export default api;

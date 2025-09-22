@@ -1,79 +1,68 @@
+// components/PostCard.js
 'use client'
 
-import styles from '../styles/PostCard.module.css'
-import api from '@/utils/api'
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
+import api from '@/utils/api';
 
 export default function PostCard({ post, onDelete }) {
-  const [likes, setLikes] = useState(post.likes_count)
-  const [hasLiked, setHasLiked] = useState(false)
-  const [isOwner, setIsOwner] = useState(false)
+  const [likesCount, setLikesCount] = useState(post.likes_count || 0);
+  const [hasLiked, setHasLiked] = useState(post.user_has_liked || false);
+  const [isOwner, setIsOwner] = useState(false);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'))
-    if (!user) return
-
-    // Check if user is the post owner
-    setIsOwner(user.id === post.author?.id)
-
-    // Check if the user has liked this post (optional optimization via API)
-    // For now, we assume the like count starts fresh on page load
-    // You could improve this by including `user_has_liked` in your serializer
-
-    
-  }, [post])
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      if (user && post && post.author) {
+        setIsOwner(user.id === post.author.id);
+      }
+    }
+  }, [post]);
 
   const handleLikeToggle = async () => {
-    const token = localStorage.getItem('token')
-    if (!token) {
-      alert('You must be logged in to like a post.')
-      return
+    if (!localStorage.getItem('token')) {
+      alert('Login first!');
+      return;
     }
-
     try {
-      await api.post('/likes/', { post: post.id }, {
-        headers: { Authorization: `Token ${token}` }
-      })
-
-      // Toggle local state
+      const res = await api.post('/likes/', { post: post.id });
+      // Backend logic toggles like / unlike
       if (hasLiked) {
-        setLikes(prev => prev - 1)
+        setLikesCount(prev => prev - 1);
       } else {
-        setLikes(prev => prev + 1)
+        setLikesCount(prev => prev + 1);
       }
-      setHasLiked(!hasLiked)
-
+      setHasLiked(!hasLiked);
     } catch (err) {
-      console.error('Like toggle error:', err)
-      alert('Something went wrong while toggling like.')
+      console.error('Like toggle error:', err);
+      alert('Could not toggle like.');
     }
-  }
+  };
 
   const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete this post?')) return
+    if (!confirm('Are you sure?')) return;
     try {
-      const token = localStorage.getItem('token')
-      await api.delete(`/posts/${post.id}/`, {
-        headers: { Authorization: `Token ${token}` }
-      })
-      onDelete?.(post.id)
+      await api.delete(`/posts/${post.id}/`);
+      onDelete(post.id);
     } catch (err) {
-      console.error('Failed to delete post:', err)
+      console.error('Delete error:', err);
+      alert('You can only delete your own post.');
     }
-  }
+  };
 
   return (
-    <div className={styles.card}>
+    <div className="post-card">
       <h3>{post.title}</h3>
       <p>by {post.author?.username}</p>
-      {post.image && <img src={post.image} alt="Post" />}
+      {post.image && (
+        <img src={post.image} alt="Post image" style={{ maxWidth: '100%' }} />
+      )}
       <p>{post.content}</p>
-
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
         <button onClick={handleLikeToggle}>
-          {hasLiked ? '💔 Dislike' : '❤️ Like'}
+          {hasLiked ? '💔 Unlike' : '❤️ Like'}
         </button>
-        <span>{likes} {likes === 1 ? 'Like' : 'Likes'}</span>
+        <span>{likesCount} {likesCount === 1 ? 'Like' : 'Likes'}</span>
 
         {isOwner && (
           <button onClick={handleDelete} style={{ marginLeft: 'auto' }}>
@@ -82,5 +71,5 @@ export default function PostCard({ post, onDelete }) {
         )}
       </div>
     </div>
-  )
+  );
 }
