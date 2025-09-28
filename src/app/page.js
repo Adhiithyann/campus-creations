@@ -11,13 +11,13 @@ export default function HomePage() {
   const [darkMode, setDarkMode] = useState(false);
   const router = useRouter();
 
-  // 🔒 Redirect if not logged in
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      router.push('/login');
-    }
-  }, []);
+  // // 🔒 Redirect if not logged in
+  // useEffect(() => {
+  //   const token = localStorage.getItem('token');
+  //   if (!token) {
+  //     router.push('/login');
+  //   }
+  // }, []);
 
   // 🌙 Load theme
   useEffect(() => {
